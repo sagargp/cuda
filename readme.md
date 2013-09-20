@@ -1,1 +1,4 @@
-Just playing with CUDA. Rendering with SDL.
+cuda
+====
+
+Playing around with CUDA
