@@ -8,6 +8,8 @@ SDL_Manager::SDL_Manager(int dim) :
 
 SDL_Manager::~SDL_Manager()
 {
+  if (m_buffer_rptr)
+    free(m_buffer_rptr);
   SDL_Quit();
 }
 
