@@ -42,7 +42,7 @@ void h_kernel(int DIM, unsigned char *ptr)
 
 int main(int argv, char **argc)
 {
-  const int DIM = 1000;
+  const int DIM = 896;
 
   std::cout << "Initializing SDL" << std::endl;
   SDL_Manager manager(DIM);
@@ -51,26 +51,28 @@ int main(int argv, char **argc)
   unsigned char *buffer = manager.get_draw_buffer();
 
   std::cout << "Computing Julia fractal on the CPU" << std::endl;
-  auto start = std::chrono::steady_clock::now();
   {
+    auto start = std::chrono::steady_clock::now();
     h_kernel(DIM, buffer);
+    auto end = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
+    std::cout << "Took " << duration.count() << "ms." << std::endl;
+
     manager.redraw();
     manager.wait_for_keypress();
   }
-  auto end = std::chrono::steady_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
-  std::cout << "Took " << duration.count() << "ms." << std::endl;
 
   std::cout << "Computing Julia fractal on the GPU" << std::endl;
-  start = std::chrono::steady_clock::now();
   {
+    auto start = std::chrono::steady_clock::now();
     run_dat_kernel(DIM, buffer);
+    auto end = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
+    std::cout << "Took " << duration.count() << "ms." << std::endl;
+
     manager.redraw();
     manager.wait_for_keypress();
   }
-  end = std::chrono::steady_clock::now();
-  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
-  std::cout << "Took " << duration.count() << "ms." << std::endl;
 
   return 0;
 }
