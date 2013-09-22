@@ -1,18 +1,11 @@
 CC=g++-4.7
-LIBS=-L/usr/local/cuda/lib -lcuda -lcudart `sdl-config --libs`
+LIBS=`sdl-config --libs`
 INCLUDES=`sdl-config --cflags`
 
-all: main
-
-main: julia.o sdl_manager.o
-	${CC} -std=c++11 -o main main.cpp julia.o sdl_manager.o ${LIBS} ${INCLUDES}
-
-julia.o:
-	nvcc -c -m64 julia.cu
+all: sdl_manager.o
 
 sdl_manager.o:
-	${CC} -g -std=c++11 -c sdl_manager.cpp ${INCLUDES}
+	${CC} -g -std=c++11 -c include/sdl_manager.cpp ${INCLUDES} -o lib/sdl_manager.o
 
 clean:
-	rm -rf sdltest main
-	rm -rf *.dSYM *.o
+	rm -rf lib/*.o
